@@ -5,9 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.navope.rento.dao.BookDAO;
-import ru.navope.rento.dao.PersonDAO;
 import ru.navope.rento.models.Person;
+import ru.navope.rento.services.BookService;
+import ru.navope.rento.services.PersonService;
 import ru.navope.rento.util.PersonValidator;
 
 import javax.validation.Valid;
@@ -17,16 +17,15 @@ import java.util.Objects;
 @RequestMapping("/people")
 public class PeopleController {
 
-    private final PersonDAO personDAO;
-    private final BookDAO bookDAO;
+    private final PersonService personService;
     private final PersonValidator personValidator;
 
     @Autowired
-    public PeopleController(PersonDAO personDAO, BookDAO bookDAO, PersonValidator personValidator) {
-        this.personDAO = personDAO;
-        this.bookDAO = bookDAO;
+    public PeopleController(PersonService personService, PersonValidator personValidator) {
+        this.personService = personService;
         this.personValidator = personValidator;
     }
+
 
     @GetMapping("/new")
     public String newPerson(@ModelAttribute("person") Person person) {
@@ -41,46 +40,48 @@ public class PeopleController {
         if(bindingResult.hasErrors()){
             return "people/new";
         }
-        personDAO.save(person);
+        personService.save(person);
         return "redirect:/people";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("person",personDAO.getPerson(id));
+        model.addAttribute("person",personService.getPerson(id));
         return "people/edit";
     }
 
     @PatchMapping("/{id}")
     public String update(@PathVariable("id") int id, @ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult) {
-        if (!Objects.equals(person.getFullName(), personDAO.getPerson(id).getFullName())){
+        if (!Objects.equals(person.getFullName(), personService.getPerson(id).getFullName())){
             personValidator.validate(person,bindingResult);
         }
 
         if(bindingResult.hasErrors()){
             return "people/edit";
         }
-        personDAO.update(person, id);
+        personService.update(person, id);
         return "redirect:/people";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        personDAO.delete(id);
+        personService.delete(id);
         return "redirect:/people";
     }
 
     @GetMapping()
     public String showPeople(Model model){
-        model.addAttribute("people", personDAO.getPeople());
+        model.addAttribute("people", personService.getPeople());
         return "people/showPeople";
     }
 
     @GetMapping("/{id}")
     public String showPerson(Model model, @PathVariable("id") int id){
-        model.addAttribute("person", personDAO.getPerson(id));
-        model.addAttribute("books", bookDAO.getPersonBooks(id));
+        Person person = personService.getPerson(id);
+        model.addAttribute("person", person);
+//        model.addAttribute("books", person.getBooks());
+        model.addAttribute("books", personService.getPersonBooks(id));
         return "people/show";
     }
 }
