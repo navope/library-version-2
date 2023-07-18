@@ -64,8 +64,20 @@ public class BooksController {
     }
 
     @GetMapping()
-    public String showBooks(Model model){
-        model.addAttribute("books", bookService.getBooks());
+    public String showBooks(Model model, @RequestParam(value = "page", required = false) Integer page,
+                            @RequestParam(value = "books_per_page", required = false) Integer booksPerPage,
+                            @RequestParam(value = "sort_by_year", required = false) Boolean sortByYear){
+        if (page!=null && booksPerPage!=null && sortByYear!=null) {
+            model.addAttribute("books",
+                    bookService.getBooksWithPaginationAndPossiblySorted(page, booksPerPage, sortByYear));
+        }else if (page!=null && booksPerPage!=null){
+            model.addAttribute("books",
+                    bookService.getBooksWithPaginationAndPossiblySorted(page, booksPerPage, false));
+        }else if (sortByYear!=null){
+            model.addAttribute("books", bookService.getBooksWithSorting(sortByYear));
+        }else {
+            model.addAttribute("books", bookService.getBooks());
+        }
         return "books/showBooks";
     }
 

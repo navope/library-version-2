@@ -80,7 +80,6 @@ public class PeopleController {
     public String showPerson(Model model, @PathVariable("id") int id){
         Person person = personService.getPerson(id);
         model.addAttribute("person", person);
-//        model.addAttribute("books", person.getBooks());
         model.addAttribute("books", personService.getPersonBooks(id));
         return "people/show";
     }

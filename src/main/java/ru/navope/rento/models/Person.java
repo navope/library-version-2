@@ -25,7 +25,6 @@ public class Person {
     @Column(name = "full_name")
     private String fullName;
 
-    //@Min(value = 1900, message = "Year of birth should not be less than 1900")
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "year_birth")

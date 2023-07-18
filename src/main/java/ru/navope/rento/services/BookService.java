@@ -1,6 +1,8 @@
 package ru.navope.rento.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.navope.rento.models.Book;
@@ -27,6 +29,26 @@ public class BookService {
     public List<Book> getBooks(){
         return bookRepository.findAll();
     }
+
+    public List<Book> getBooksWithPaginationAndPossiblySorted(int page, int booksPerPage, boolean sortByYear) {
+        if (page < 0 || booksPerPage < 0){
+            return bookRepository.findAll();
+        }
+        if (sortByYear){
+            return bookRepository.findAll(PageRequest.of(page,booksPerPage, Sort.by("year"))).getContent();
+        }else {
+            return bookRepository.findAll(PageRequest.of(page,booksPerPage)).getContent();
+        }
+    }
+
+    public List<Book> getBooksWithSorting(boolean sortByYear) {
+        if (sortByYear){
+            return bookRepository.findAll(Sort.by("year"));
+        }else {
+            return bookRepository.findAll();
+        }
+    }
+
 
     public Book getBook(int id){
         return bookRepository.findById(id).orElse(null);
