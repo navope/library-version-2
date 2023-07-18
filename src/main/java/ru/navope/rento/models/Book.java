@@ -1,31 +1,56 @@
 package ru.navope.rento.models;
 
-import javax.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import java.util.Date;
+
+@Entity
+@Table(name = "book")
 public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     @NotEmpty(message = "Book's name should not be empty")
     @Pattern(regexp = "[A-Z][A-Za-z]*.*", message = "The first word of the book title begins with a " +
             "capital letter and consists only of letters, and all subsequent characters can be any")
+    @Column(name = "name")
     private String name;
 
     @NotEmpty(message = "Author's name should not be empty")
     @Pattern(regexp = "[A-Z]\\w+ [A-Z]\\w+", message = "The author's name should consist only of letters " +
             "and match such a pattern: 'Name Surname'")
+    @Column(name = "author")
     private String author;
 
     @Min(value = 1,message = "Year must be greater than 0")
+    @Column(name = "year")
     private int year;
 
-    private Integer personId;
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person owner;
 
-    public Book(int id ,String name, String author, int year, Integer personId) {
+    public Book(int id ,String name, String author, int year) {
         this.id = id;
         this.name = name;
         this.author = author;
         this.year = year;
-        this.personId = personId;
+    }
+
+    public Book() {
+    }
+
+    public Person getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
     }
 
     public int getId() {
@@ -34,17 +59,6 @@ public class Book {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(Integer personId) {
-        this.personId = personId;
-    }
-
-    public Book() {
     }
 
     public String getName() {

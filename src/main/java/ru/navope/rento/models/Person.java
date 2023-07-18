@@ -1,28 +1,54 @@
 package ru.navope.rento.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
+import java.util.List;
 
+@Entity
+@Table(name="Person")
 public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     @NotEmpty(message = "Name should not be empty")
     @Pattern(regexp = "[A-Z]\\w+ [A-Z]\\w+", message = "The full name should consist only of letters " +
             "and match such a pattern: 'Name Surname'")
+    @Column(name = "full_name")
     private String fullName;
 
-    @Min(value = 1900, message = "Year of birth should not be less than 1900")
-    private int yearBirth;
+    //@Min(value = 1900, message = "Year of birth should not be less than 1900")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Column(name = "year_birth")
+    private Date yearBirth;
 
-    public Person(int id, String fullName, int yearBirth) {
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
+
+    public Person(int id, String fullName, Date yearBirth) {
         this.id = id;
         this.fullName = fullName;
         this.yearBirth = yearBirth;
     }
 
     public Person() {
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 
     public int getId() {
@@ -41,11 +67,11 @@ public class Person {
         this.fullName = fullName;
     }
 
-    public int getYearBirth() {
+    public Date getYearBirth() {
         return yearBirth;
     }
 
-    public void setYearBirth(int yearBirth) {
+    public void setYearBirth(Date yearBirth) {
         this.yearBirth = yearBirth;
     }
 }
