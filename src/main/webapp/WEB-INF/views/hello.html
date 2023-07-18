@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+</head>
+<body>
+
+<form th:method="GET" th:action="@{/people}">
+    <input type="submit" value="People"/>
+</form>
+
+<br/>
+
+<form th:method="GET" th:action="@{/books}">
+    <input type="submit" value="Books"/>
+</form>
+
+</body>
+</html>
