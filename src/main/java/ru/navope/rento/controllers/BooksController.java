@@ -102,4 +102,29 @@ public class BooksController {
         bookService.toFree(id);
         return "redirect:/books/{id}";
     }
+
+    @GetMapping("/search")
+    public String search(){
+        return "books/search";
+    }
+
+    @PostMapping("/search")
+    public String find(Model model, @RequestParam(value = "content", required = false) String content){
+        System.out.println("---");
+        System.out.println(content);
+        System.out.println("---");
+        Book book = null;
+        if (content!=null && !"".equals(content)){
+            book = bookService.findBooks(content);
+        }else {
+            return "redirect:/books/search";
+        }
+        model.addAttribute("book",book);
+        if(book!=null){
+            model.addAttribute("owner",book.getOwner());
+        }else {
+            model.addAttribute("owner",null);
+        }
+        return "books/searchResult";
+    }
 }

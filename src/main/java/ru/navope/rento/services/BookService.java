@@ -49,6 +49,14 @@ public class BookService {
         }
     }
 
+    public Book findBooks(String content){
+        List<Book> books = bookRepository.findByNameStartingWithIgnoreCase(content);
+        if (books.size() > 0){
+            return books.get(0);
+        }
+        return null;
+    }
+
 
     public Book getBook(int id){
         return bookRepository.findById(id).orElse(null);

@@ -19,9 +19,16 @@
 
 <br/>
 
+<form th:method="GET" th:action="@{/books/search}">
+    <input type="submit" value="Search"/>
+</form>
+
+<br/>
+
 <form th:method="GET" th:action="@{/}">
     <input type="submit" value="Start page"/>
 </form>
+
 
 </body>
 </html>
