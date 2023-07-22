@@ -9,5 +9,6 @@ create table book (
     name varchar(100) NOT NULL,
     author varchar(100) NOT NULL,
     year int NOT NULL,
+    create_at DATE,
     person_id int REFERENCES person(id) on delete set null
 );

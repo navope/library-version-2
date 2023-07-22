@@ -84,6 +84,7 @@ public class BooksController {
     @GetMapping("/{id}")
     public String showBook(Model model, @PathVariable("id") int id, @ModelAttribute("person") Person person){
         Book book = bookService.getBook(id);
+        System.out.println(book.isOverdue());
         Person human = book.getOwner();
         model.addAttribute("book", book);
         model.addAttribute("human", human);
@@ -110,9 +111,6 @@ public class BooksController {
 
     @PostMapping("/search")
     public String find(Model model, @RequestParam(value = "content", required = false) String content){
-        System.out.println("---");
-        System.out.println(content);
-        System.out.println("---");
         Book book = null;
         if (content!=null && !"".equals(content)){
             book = bookService.findBooks(content);

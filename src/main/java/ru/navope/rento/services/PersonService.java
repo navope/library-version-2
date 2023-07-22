@@ -18,6 +18,8 @@ public class PersonService {
 
     private final PersonRepository personRepository;
 
+    private static final long BOOK_RENTAL_TIME = 864000000;
+
     @Autowired
     public PersonService(PersonRepository personRepository) {
         this.personRepository = personRepository;
@@ -36,6 +38,10 @@ public class PersonService {
         Optional<Person> person = personRepository.findById(id);
         if (person.isPresent()){
             Hibernate.initialize(person.get().getBooks());
+            for (Book book:person.get().getBooks()
+                 ) {
+                checkTime(book);
+            }
             return person.get().getBooks();
         }
         return Collections.emptyList();
@@ -59,6 +65,13 @@ public class PersonService {
     @Transactional
     public void delete(int id){
         personRepository.deleteById(id);
+    }
+
+    private void checkTime(Book book){
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - book.getCreateAt().getTime() > BOOK_RENTAL_TIME){
+            book.setOverdue(true);
+        }
     }
 
 }

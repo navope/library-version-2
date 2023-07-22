@@ -16,8 +16,16 @@
     <hr/>
     <b>Books:</b>
     <br/>
-    <table th:each="book : ${books}">
-        <tr th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}">book</tr>
+<!--    <table th:each="book : ${books}" th:style = "${book.isOverdue()}?'color:red'">-->
+<!--        <tr th:text="${book.getName() + ', '-->
+<!--        + book.getAuthor() + ', ' + book.getYear()}">book</tr>-->
+<!--    </table>-->
+    <table>
+        <tr th:each="book : ${books}" th:style="${book.isOverdue()} ? 'color:red' : ''">
+            <td th:text="${book.getName()} +', '"></td>
+            <td th:text="${book.getAuthor()} + ', '"></td>
+            <td th:text="${book.getYear()}"></td>
+            </tr>
     </table>
     <hr/>
 </div>

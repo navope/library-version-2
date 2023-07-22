@@ -10,6 +10,7 @@ import ru.navope.rento.models.Person;
 import ru.navope.rento.repositories.BookRepository;
 import ru.navope.rento.repositories.PersonRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final PersonRepository personRepository;
+
 
     @Autowired
     public BookService(BookRepository bookRepository, PersonRepository personRepository) {
@@ -64,6 +66,7 @@ public class BookService {
 
     @Transactional
     public void save(Book book){
+        book.setCreateAt(new Date());
         bookRepository.save(book);
     }
 
