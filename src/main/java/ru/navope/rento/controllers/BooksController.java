@@ -11,6 +11,7 @@ import ru.navope.rento.services.BookService;
 import ru.navope.rento.services.PersonService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/books")
@@ -111,18 +112,13 @@ public class BooksController {
 
     @PostMapping("/search")
     public String find(Model model, @RequestParam(value = "content", required = false) String content){
-        Book book = null;
+        List<Book> book = null;
         if (content!=null && !"".equals(content)){
             book = bookService.findBooks(content);
         }else {
             return "redirect:/books/search";
         }
-        model.addAttribute("book",book);
-        if(book!=null){
-            model.addAttribute("owner",book.getOwner());
-        }else {
-            model.addAttribute("owner",null);
-        }
-        return "books/searchResult";
+        model.addAttribute("books", book);
+        return "books/search";
     }
 }

@@ -13,6 +13,27 @@
     <input type="submit" value="Search!"/>
 </form>
 
+
+<div th:if="${books}">
+    <div th:if="${books.isEmpty()}">
+        <span>Books not found</span>
+    </div>
+
+    <div th:each="book : ${books}">
+        <p th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}">book</p>
+
+        <div th:if="${book.getOwner() != null}">
+            <span>The book is now: </span> <span th:text="${book.getOwner().getFullName()}">Person Name</span>
+        </div>
+
+        <div th:if="${book.getOwner() == null}">
+            <span>The book is free</span>
+        </div>
+
+        <hr/>
+    </div>
+</div>
+
 <br/>
 
 <form th:method="GET" th:action="@{/books}">
@@ -25,6 +46,7 @@
 <form th:method="GET" th:action="@{/}">
     <input type="submit" value="Start page"/>
 </form>
+
 
 </body>
 </html>

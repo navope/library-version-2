@@ -31,9 +31,9 @@ public class Book {
     @Column(name = "year")
     private int year;
 
-    @Column(name = "create_at")
+    @Column(name = "take_at")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createAt;
+    private Date takeAt;
 
     @Transient
     private boolean overdue = false;
@@ -52,12 +52,12 @@ public class Book {
     public Book() {
     }
 
-    public Date getCreateAt() {
-        return createAt;
+    public Date getTakeAt() {
+        return takeAt;
     }
 
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
+    public void setTakeAt(Date takeAt) {
+        this.takeAt = takeAt;
     }
 
     public boolean isOverdue() {

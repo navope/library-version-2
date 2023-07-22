@@ -69,7 +69,7 @@ public class PersonService {
 
     private void checkTime(Book book){
         long currentTime = System.currentTimeMillis();
-        if (currentTime - book.getCreateAt().getTime() > BOOK_RENTAL_TIME){
+        if (currentTime - book.getTakeAt().getTime() > BOOK_RENTAL_TIME){
             book.setOverdue(true);
         }
     }

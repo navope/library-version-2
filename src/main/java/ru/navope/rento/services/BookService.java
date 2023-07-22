@@ -51,12 +51,8 @@ public class BookService {
         }
     }
 
-    public Book findBooks(String content){
-        List<Book> books = bookRepository.findByNameStartingWithIgnoreCase(content);
-        if (books.size() > 0){
-            return books.get(0);
-        }
-        return null;
+    public List<Book> findBooks(String content){
+        return  bookRepository.findByNameStartingWithIgnoreCase(content);
     }
 
 
@@ -66,29 +62,39 @@ public class BookService {
 
     @Transactional
     public void save(Book book){
-        book.setCreateAt(new Date());
+        book.setTakeAt(new Date());
         bookRepository.save(book);
     }
 
     @Transactional
     public void update(Book updateBook, int id){
+        Optional<Book> book = bookRepository.findById(id);
+        if (book.isPresent()){
+            updateBook.setOwner(book.get().getOwner());
+        }
         updateBook.setId(id);
         bookRepository.save(updateBook);
     }
 
     @Transactional
     public void assign(int bookId, int personId){
-        Book book = getBook(bookId);
-        Optional<Person> person = personRepository.findById(personId);
-        person.ifPresent(book::setOwner);
+        bookRepository.findById(bookId).ifPresent(
+            book->{
+                book.setOwner(personRepository.findById(personId).orElse(null));
+                book.setTakeAt(new Date());
+            }
+        );
     }
 
     @Transactional
-    public void toFree(int id){
-        Book book = getBook(id);
-        book.setOwner(null);
-        bookRepository.save(book);
+    public void toFree(int id) {
+        bookRepository.findById(id).ifPresent(
+            book -> {
+                book.setOwner(null);
+                book.setTakeAt(null);
+        });
     }
+
 
     @Transactional
     public void delete(int id){
